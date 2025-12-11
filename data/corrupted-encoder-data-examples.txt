@@ -1,0 +1,45 @@
+15:48:44.759 -> {"timestamp":103643,"payload":{"state":"STATE_WAIT","servo":40,"encode":{"pos":[0],"angle":["    0.000"]},"loadcell":{"force":[" -390.000"]},"meta":{"samples":1,"time":[103643]}}}
+15:48:45.757 -> {"timestamp":104643,"payload":{"state":"STATE_WAIT","servo":40,"encode":{"pos":[0],"angle":["    0.000"]},"loadcell":{"force":[" -501.000"]},"meta":{"samples":1,"time":[104643]}}}
+15:48:46.754 -> {"timestamp":105643,"payload":{"state":"STATE_WAIT","servo":40,"encode":{"pos":[11269],"angle":[" 6761.400"]},"loadcell":{"force":[" -506.000"]},"meta":{"samples":1,"time":[105643]}}}
+15:48:47.752 -> {"timestamp":106643,"payload":{"state":"STATE_WAIT","servo":40,"encode":{"pos":[11269],"angle":[" 6761.400"]},"loadcell":{"force":[" -484.000"]},"meta":{"samples":1,"time":[106643]}}}
+
+
+
+15:54:29.367 -> {"timestamp":88641,"payload":{"state":"STATE_WAIT","servo":40,"encode":{"pos":[0],"angle":["    0.000"]},"loadcell":{"force":[" -481.000"]},"meta":{"samples":1,"time":[88641]}}}
+15:54:30.368 -> 0
+15:54:30.368 -> {"timestamp":89641,"payload":{"state":"STATE_WAIT","servo":40,"encode":{"pos":[0],"angle":["    0.000"]},"loadcell":{"force":[" -517.000"]},"meta":{"samples":1,"time":[89641]}}}
+15:54:31.368 -> 0
+15:54:31.368 -> {"timestamp":90641,"payload":{"state":"STATE_WAIT","servo":40,"encode":{"pos":[0],"angle":["    0.000"]},"loadcell":{"force":[" -518.000"]},"meta":{"samples":1,"time":[90641]}}}
+15:54:32.368 -> 11269
+15:54:32.368 -> {"timestamp":91641,"payload":{"state":"STATE_WAIT","servo":40,"encode":{"pos":[11269],"angle":[" 6761.400"]},"loadcell":{"force":[" -502.000"]},"meta":{"samples":1,"time":[91641]}}}
+15:54:33.403 -> 11269
+
+
+
+5:57:50.379 -> 0
+15:57:50.379 -> {"timestamp":105643,"payload":{"state":"STATE_WAIT","servo":40,"encode":{"pos":[0],"angle":["    0.000"]},"loadcell":{"force":[" -379.000"]},"meta":{"samples":1,"time":[105643]}}}
+15:57:51.380 -> 0
+15:57:51.380 -> {"timestamp":106643,"payload":{"state":"STATE_WAIT","servo":40,"encode":{"pos":[0],"angle":["    0.000"]},"loadcell":{"force":[" -427.000"]},"meta":{"samples":1,"time":[106643]}}}
+15:57:52.381 -> 1280
+15:57:52.381 -> {"timestamp":107643,"payload":{"state":"STATE_WAIT","servo":40,"encode":{"pos":[1280],"angle":["  768.000"]},"loadcell":{"force":[" -440.000"]},"meta":{"samples":1,"time":[107643]}}}
+15:57:53.380 -> 1280
+15:57:53.380 -> {"timestamp":108643,"payload":{"state":"STATE_WAIT","servo":40,"encode":{"pos":[1280],"angle":["  768.000"]},"loadcell":{"force":[" -500.000"]},"meta":{"samples":1,"time":[108643]}}}
+15:57:54.413 -> 11269
+15:57:54.413 -> {"timestamp":109643,"payload":{"state":"STATE_WAIT","servo":40,"encode":{"pos":[11269],"angle":[" 6761.400"]},"loadcell":{"force":[" -314.000"]},"meta":{"samples":1,"time":[109643]}}}
+15:57:55.381 -> 11269
+
+Increased array size from 2 to 3, still only taking 1 sample per print
+- Broken from first instance
+
+
+Reduced array size down to 1
+- this fixed problem so far?!
+
+
+- Set array size to 10
+Try initialising arrays with looping function in setup
+- This did not work, failed instantly
+
+array size of 1, init arrays -> still eventually failed
+
+
