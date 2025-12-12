@@ -51,7 +51,7 @@ public:
 
   void jsonBegin();
 
-  jsonStateData jsonReadSerialLoop();  // function needs to be called periodically to accept incoming serial messages, parse & return jsonStateData with new state /and data required for new state
+  jsonStateData_t jsonReadSerialLoop();  // function needs to be called periodically to accept incoming serial messages, parse & return jsonStateData_t with new state /and data required for new state
 
   void printJSON(StaticJsonDocument<JSON_RX_SIZE> *jsonDoc);  // Prints the static jsonRXdoc
 
@@ -60,21 +60,21 @@ public:
 
   const char *getDataType(dataTypes type);
 
-  void printJSONdata(jsonStateData *data);
+  void printJSONdata(jsonStateData_t *data);
 
 //  void print_cmds();
 
 #if JSON_USE_QUEUE == true
-  int8_t enque_cmd(jsonStateData *newItem);  // Returns the number of items in the queue, or -1 on fail
+  int8_t enque_cmd(jsonStateData_t *newItem);  // Returns the number of items in the queue, or -1 on fail
 
-  jsonStateData dequeue_cmd();  // returns first queue item or 0 if queue is empty when called
+  jsonStateData_t dequeue_cmd();  // returns first queue item or 0 if queue is empty when called
 #endif
 
 private:
   void safe_copy_string(char *target,const char *newString, uint8_t targetLength);
 
 #if JSON_USE_QUEUE == true
-  jsonStateData jsonQueue[CMD_QUEUE_LENGTH];
+  jsonStateData_t jsonQueue[CMD_QUEUE_LENGTH];
   int8_t queue_size = 0;  // must be managed "manually"
 #endif
 };

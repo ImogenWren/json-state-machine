@@ -37,9 +37,9 @@ void jsonMessenger::printJSON(StaticJsonDocument<JSON_RX_SIZE> *jsonDoc) {
 
 
 
-jsonStateData jsonMessenger::jsonReadSerialLoop() {
+jsonStateData_t jsonMessenger::jsonReadSerialLoop() {
 
-  jsonStateData jsonRX_data = {STATE_NULL, NONE, EMPTY, 0, 0, 0.0, "", "", false };  // Default message that will be passed out if no data received or cannot be parsed
+  jsonStateData_t jsonRX_data = {STATE_NULL, NONE, EMPTY, 0, 0, 0.0, "", "", false };  // Default message that will be passed out if no data received or cannot be parsed
 
   if (Serial.available() > 0) {
     //Serial.println("Serial Available");
@@ -265,7 +265,7 @@ const char *jsonMessenger::getDataType(dataTypes type) {
   return typeNames[type];
 }
 
-void jsonMessenger::printJSONdata(jsonStateData *data) {  // Use -> to assess members of a pointer to a struct
+void jsonMessenger::printJSONdata(jsonStateData_t *data) {  // Use -> to assess members of a pointer to a struct
   Serial.print(F("cmdState: "));
   Serial.print(jsonMessenger::getCMDkey(data->cmdState));
   Serial.print(F(" dataType: "));
@@ -308,7 +308,7 @@ void jsonMessenger::safe_copy_string(char *target, const char *newString, uint8_
 
 #if JSON_USE_QUEUE == true
 // Returns the number of items in the queue, or -1 on fail
-int8_t jsonMessenger::enque_cmd(jsonStateData *newItem) {
+int8_t jsonMessenger::enque_cmd(jsonStateData_t *newItem) {
   Serial.print(F("enque -> length:  "));
   if (queue_size < CMD_QUEUE_LENGTH) {
     jsonQueue[queue_size] = *newItem;
@@ -325,10 +325,10 @@ int8_t jsonMessenger::enque_cmd(jsonStateData *newItem) {
 
 #if JSON_USE_QUEUE == true
 // returns first queue item or 0 if queue is empty when called
-jsonStateData jsonMessenger::dequeue_cmd() {
-  jsonStateData first_item = { NONE, EMPTY, 0, 0.0, "", false };
+jsonStateData_t jsonMessenger::dequeue_cmd() {
+  jsonStateData_t first_item = { NONE, EMPTY, 0, 0.0, "", false };
   if (queue_size > 0) {
-    jsonStateData first_item = jsonQueue[0];
+    jsonStateData_t first_item = jsonQueue[0];
 
     for (int i = 0; i < queue_size; i++) {
       //std::cout << "i: " << i << " i+1: " << i + 1 << std::endl;

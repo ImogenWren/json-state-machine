@@ -14,7 +14,14 @@ Sketch uses 26224 bytes (85%) of program storage space. Maximum is 30720 bytes.
 Global variables use 1062 bytes (51%) of dynamic memory, leaving 986 bytes for local variables. Maximum is 2048 bytes.
 
 Version 2.1
-- going back to using this structure to try and cut down on manual typing
+- going back to using this function pointer structure to try and cut down on manual typing
+Sketch uses 26580 bytes (86%) of program storage space. Maximum is 30720 bytes.
+Global variables use 1172 bytes (57%) of dynamic memory, leaving 876 bytes for local variables. Maximum is 2048 bytes.
+A little more memory intensive but much less typing dependent.
+- We have eliminated both the state machine case structure, and the main loop if/else structure
+- Still more things that can be done to save overhead, state map in jsonConfig no longer needs to define its own enum list, can use the table of 
+    commands directly in the map, 
+    - also may be able to PROGMEM the commands list, though this will require a small re-write of jsonMessenger.cpp to get those values from PROGMEM during runtime.
 
     (*StateMachine[SmState].func)();
 
@@ -73,14 +80,15 @@ void loop() {
 
 
   // Json Messenger & State Machine
-  jsonStateData nextState_data = jsonRX.jsonReadSerialLoop();
+  jsonStateData_t nextState_data = jsonRX.jsonReadSerialLoop();
 
 
   if (nextState_data.cmd_received) {  // If command is receive   //delay(10);
 
 
-    const char* cmd = jsonRX.getCMDkey(nextState_data.cmdState);  // I feel like the entire point of using ENUMs is being totally lost by doing this, but it is working
-    //std::cout << std::endl;
+   // const char* cmd = jsonRX.getCMDkey(nextState_data.cmdState);  // I feel like the entire point of using ENUMs is being totally lost by doing this, but it is working
+ 
+ /*   //std::cout << std::endl;
     // std::cout << "{\"rx-cmd\":\"" << cmd << "\",\"datatype\":\"" << jsonRX.getDataType(nextState_data.data_type) << "\",\"data\":\"";
     Serial.print(F("{\"rx-cmd\":\""));
     Serial.print(cmd);
@@ -94,7 +102,7 @@ void loop() {
     // Is this now missing float clause?
     //std::cout << "\"}" << std::endl;
     Serial.println("\"}");
-
+*/
     // This is the bit that parses the command recieved by user, and sets the state machine to go to the correct state
     if (nextState_data.stateEnum != STATE_NULL) {  // if fan speed change command received
       smState = nextState_data.stateEnum;

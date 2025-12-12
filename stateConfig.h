@@ -1,12 +1,8 @@
 /*  stateConfig.h
 
-This header defines the state machine framework. It is intended to be used with the jsonMessenger.h Library to handle receiving and parsing JSON formatted commands entered by a user, 
-however this state machine also operates independently and can be used without jsonMessenger.h
+STEP 1:
 
-This State Machine framework can be adapted to many different purposes, follow the numbered comments for an explanation
-
-Imogen Heard
-11/02/2025
+- This header defines ALL active states for the state machine, via ENUM and Short text description saved on PROGMEM
 
 
 */

@@ -1,31 +1,11 @@
 /*  jsonConfig.h
 
-This header should be used with the jsonMessenger library to define all the working states & commands that can be decoded by the jsonMessenger system.
-
-This library is designed to parse commands recieved via the Serial object in Arduino. Commands should be formatted in CMD:VALUE pairs as follows:
-
-Version 1 -> succinct command structure
-`{"CMD":"VALUE"}` -> for CMDs with passed values
-or
-`{"CMD":} -> for CMDs with no additional values
-note: in the 2nd example, any data entered after : will be ignored, as we have already defined the datatypes that will be passed with each command to the parser
-
-Version 2 -> Verbose command structure
-`{"set":"CMD","to":"VALUE"} -> for CMDs with passed values
-or
-`{"set":"CMD"} -> for CMDs with no additional data.
-
-As the libary works via parsing JSON structures, any additional key:value pairs will simply be ignored, as long as the overal JSON structure is validated, the parser will just look
-for the existance of matching keys, and ignore anything else.
-
-
-Please see: https://github.com/ImogenWren/jsonMessenger_library for latest version and usage instructions, or follow the numbered comments for an
-explanation of how to modify this template for other uses. 
-
-All modifications should be carried out in this header file `jsonConfig.h`, please do not modify jsonMessenger.h or jsonMessenger.cpp!
-
-Imogen Heard
-21/10/2024
+STEP 2:
+ - This header defines:
+      - all the possible datatypes that can be passed with a JSON message
+      - the commands that will be required for users to interact with the state machine
+      - A map of each command along with the datatype that will be passed with the command, and the state which this command will navigate to
+      - A structure that will be passed out of the jsonMessenger library into every state, which will contain all the required data for any state
 
 
 */
@@ -106,6 +86,7 @@ static char typeNames[][8] = {
 // NOTE: this list may not include all possible states for the state machine, JUST the states that are triggered by receiving a command.
 // - Include a null value at 0 -> This is because this enum will be initialised at 0 to represent jsonMessenger not receiving data, or being unable to parse a command
 
+// NEW INSTRUCTION -> This list is likely depreciated and Is only here currently for legacy reasons, it may be removed in the next version
 typedef enum {
   NONE,  // Include null or none state
   SERVO,
@@ -127,41 +108,6 @@ typedef enum {
   HELP,
   NUM_VALUES  // Add sentinal NUM_VALUES to count number of elements, this is very important and will be used to size for loops inside the jsonMessenger object
 } jsonStates;
-
-
-// 3. Link each jsonState ENUM with the datatype ENUM in a ~~map~~<depreciated> structure -> Now uses 2D array!.
-//const std::map<jsonStates, dataTypes> jsonStateMap = {  // Old version
-// also link directly to the state it triggers?
-
-
-
-typedef struct {
-  jsonStates cmd;       //< Defines the ENUM for the command
-  dataTypes data_type;  //< Defines the ENUM for the data type
-  stateDef state;
-} jsonStateMapData;
-
-const jsonStateMapData jsonStateMap[NUM_VALUES] = {
-  { jsonStates::NONE, dataTypes::EMPTY, STATE_NULL },
-  { jsonStates::SERVO, dataTypes::INTEGER, STATE_SERVO },
-  { jsonStates::HOME, dataTypes::EMPTY, STATE_HOME },
-  { jsonStates::TARE, dataTypes::INTEGER, STATE_TARE },
-  { jsonStates::SAMPLERATE, dataTypes::UINT, STATE_SAMPLERATE },
-  { jsonStates::PRINTRATE, dataTypes::UINT, STATE_PRINTRATE },
-  { jsonStates::STARTSTREAM, dataTypes::EMPTY, STATE_STARTSTREAM },
-  { jsonStates::ENDSTREAM, dataTypes::EMPTY, STATE_STOPSTREAM },
-
-  { jsonStates::SET_SECRET, dataTypes::CSTRING, STATE_SETSECRET },
-  { jsonStates::SET_CAL, dataTypes::AUTH_FLOAT, STATE_SET_CAL },
-  { jsonStates::GET_CAL, dataTypes::EMPTY, STATE_GET_CAL },
-  { jsonStates::SET_MATERIAL, dataTypes::AUTH_MSG, STATE_SET_MATERIAL },
-  { jsonStates::SET_DIAMETER, dataTypes::AUTH_MSG, STATE_SET_DIAMETER },
-  { jsonStates::SET_ANGLEMAX, dataTypes::AUTH_INT, STATE_SET_ANGLEMAX },
-  { jsonStates::SET_LOADMAX, dataTypes::AUTH_INT, STATE_SET_LOADMAX },
-  { jsonStates::GET_SETTINGS, dataTypes::EMPTY, STATE_GET_SETTINGS },
-  { jsonStates::INFO, dataTypes::EMPTY, STATE_INFO },
-  { jsonStates::HELP, dataTypes::EMPTY, STATE_HELP }
-};
 
 
 
@@ -192,6 +138,45 @@ static char jsonCommandKeys[][8] = {
 };
 
 #pragma GCC diagnostic pop
+
+
+// 3. Link each jsonState ENUM with the datatype ENUM in a ~~map~~<depreciated> structure -> Now uses 2D array!.
+//const std::map<jsonStates, dataTypes> jsonStateMap = {  // Old version
+// also link directly to the state it triggers?
+
+
+
+typedef struct {
+  jsonStates cmd;       //< Defines the ENUM for the command
+  dataTypes data_type;  //< Defines the ENUM for the data type
+  stateDef state;
+} jsonStateMapData_t;
+
+const jsonStateMapData_t jsonStateMap[NUM_VALUES] = {
+  { jsonStates::NONE, dataTypes::EMPTY, STATE_NULL },
+  { jsonStates::SERVO, dataTypes::INTEGER, STATE_SERVO },
+  { jsonStates::HOME, dataTypes::EMPTY, STATE_HOME },
+  { jsonStates::TARE, dataTypes::INTEGER, STATE_TARE },
+  { jsonStates::SAMPLERATE, dataTypes::UINT, STATE_SAMPLERATE },
+  { jsonStates::PRINTRATE, dataTypes::UINT, STATE_PRINTRATE },
+  { jsonStates::STARTSTREAM, dataTypes::EMPTY, STATE_STARTSTREAM },
+  { jsonStates::ENDSTREAM, dataTypes::EMPTY, STATE_STOPSTREAM },
+
+  { jsonStates::SET_SECRET, dataTypes::CSTRING, STATE_SETSECRET },
+  { jsonStates::SET_CAL, dataTypes::AUTH_FLOAT, STATE_SET_CAL },
+  { jsonStates::GET_CAL, dataTypes::EMPTY, STATE_GET_CAL },
+  { jsonStates::SET_MATERIAL, dataTypes::AUTH_MSG, STATE_SET_MATERIAL },
+  { jsonStates::SET_DIAMETER, dataTypes::AUTH_MSG, STATE_SET_DIAMETER },
+  { jsonStates::SET_ANGLEMAX, dataTypes::AUTH_INT, STATE_SET_ANGLEMAX },
+  { jsonStates::SET_LOADMAX, dataTypes::AUTH_INT, STATE_SET_LOADMAX },
+  { jsonStates::GET_SETTINGS, dataTypes::EMPTY, STATE_GET_SETTINGS },
+  { jsonStates::INFO, dataTypes::EMPTY, STATE_INFO },
+  { jsonStates::HELP, dataTypes::EMPTY, STATE_HELP }
+};
+
+
+
+
 
 // NOTE, this can also be used to turn the enums above back into strings for human readability
 
@@ -273,7 +258,7 @@ const char *const jsonCmdRange[] PROGMEM = {
 
 // 5. Finally Declare a structure that will hold both the jsonStates enum, and any data that will need to be passed from jsonMessenger, into the states.
 // We can make this fairly generic by including additional datatypes, or we can reduce the size of the memory used by removing the unneeded ones
-struct jsonStateData {
+struct jsonStateData_t {
   stateDef stateEnum;   // This likely supercedes the commandState enum, as we can just direcly plug this variable into smState, saving another list of if/elses
   jsonStates cmdState;  // The command state enum to tell state machine what state to go to next
   dataTypes data_type;  // The type of data being passed along with structure (though state should know what data to expect anyway), this could be removed to save space
