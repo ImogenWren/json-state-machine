@@ -32,10 +32,13 @@ Imogen Heard
 
 //#pragma once
 
+
+
+
 #ifndef jsonConfig_h
 #define jsonConfig_h
 
-
+#include "stateConfig.h"  /// we should have already defined all the valid states and we will need them here
 
 // As alternative to <map> data structure has been developed, this is all depreciated
 /*
@@ -70,9 +73,9 @@ typedef enum {  // enum to pass variable types between functions
   FLOAT,
   CSTRING,
   BOOL,
-  AUTH_INT,  // 14/07/25 adding new datatype, this will tell jsonMessenger that 2 datas will be present, but will use already existing datatypes in RX data structure
-  AUTH_FLOAT, // 12/12/25 auth with float data
-  AUTH_MSG   // 27/11/25 adding new datatype, auth with char message
+  AUTH_INT,    // 14/07/25 adding new datatype, this will tell jsonMessenger that 2 datas will be present, but will use already existing datatypes in RX data structure
+  AUTH_FLOAT,  // 12/12/25 auth with float data
+  AUTH_MSG     // 27/11/25 adding new datatype, auth with char message
 } dataTypes;
 
 // 1b. Place these enums into an array to enable lookup by index (This shouldnt be nessissary but it fixed a bug at one point)
@@ -128,27 +131,36 @@ typedef enum {
 
 // 3. Link each jsonState ENUM with the datatype ENUM in a ~~map~~<depreciated> structure -> Now uses 2D array!.
 //const std::map<jsonStates, dataTypes> jsonStateMap = {  // Old version
+// also link directly to the state it triggers?
 
-const uint16_t jsonStateMap[NUM_VALUES][2] = {
-  { jsonStates::NONE, dataTypes::EMPTY },
-  { jsonStates::SERVO, dataTypes::INTEGER },
-  { jsonStates::HOME, dataTypes::EMPTY },
-  { jsonStates::TARE, dataTypes::INTEGER },
-  { jsonStates::SAMPLERATE, dataTypes::UINT },
-  { jsonStates::PRINTRATE, dataTypes::UINT },
-  { jsonStates::STARTSTREAM, dataTypes::EMPTY },
-  { jsonStates::ENDSTREAM, dataTypes::EMPTY },
 
-  { jsonStates::SET_SECRET, dataTypes::CSTRING },
-  { jsonStates::SET_CAL, dataTypes::AUTH_FLOAT },
-  { jsonStates::GET_CAL, dataTypes::EMPTY },
-  { jsonStates::SET_MATERIAL, dataTypes::AUTH_MSG },
-  { jsonStates::SET_DIAMETER, dataTypes::AUTH_MSG },
-  { jsonStates::SET_ANGLEMAX, dataTypes::AUTH_INT },
-  { jsonStates::SET_LOADMAX, dataTypes::AUTH_INT },
-  { jsonStates::GET_SETTINGS, dataTypes::EMPTY },
-  { jsonStates::INFO, dataTypes::EMPTY },
-  { jsonStates::HELP, dataTypes::EMPTY }
+
+typedef struct {
+  jsonStates cmd;       //< Defines the ENUM for the command
+  dataTypes data_type;  //< Defines the ENUM for the data type
+  stateDef state;
+} jsonStateMapData;
+
+const jsonStateMapData jsonStateMap[NUM_VALUES] = {
+  { jsonStates::NONE, dataTypes::EMPTY, STATE_NULL },
+  { jsonStates::SERVO, dataTypes::INTEGER, STATE_SERVO },
+  { jsonStates::HOME, dataTypes::EMPTY, STATE_HOME },
+  { jsonStates::TARE, dataTypes::INTEGER, STATE_TARE },
+  { jsonStates::SAMPLERATE, dataTypes::UINT, STATE_SAMPLERATE },
+  { jsonStates::PRINTRATE, dataTypes::UINT, STATE_PRINTRATE },
+  { jsonStates::STARTSTREAM, dataTypes::EMPTY, STATE_STARTSTREAM },
+  { jsonStates::ENDSTREAM, dataTypes::EMPTY, STATE_STOPSTREAM },
+
+  { jsonStates::SET_SECRET, dataTypes::CSTRING, STATE_SETSECRET },
+  { jsonStates::SET_CAL, dataTypes::AUTH_FLOAT, STATE_SET_CAL },
+  { jsonStates::GET_CAL, dataTypes::EMPTY, STATE_GET_CAL },
+  { jsonStates::SET_MATERIAL, dataTypes::AUTH_MSG, STATE_SET_MATERIAL },
+  { jsonStates::SET_DIAMETER, dataTypes::AUTH_MSG, STATE_SET_DIAMETER },
+  { jsonStates::SET_ANGLEMAX, dataTypes::AUTH_INT, STATE_SET_ANGLEMAX },
+  { jsonStates::SET_LOADMAX, dataTypes::AUTH_INT, STATE_SET_LOADMAX },
+  { jsonStates::GET_SETTINGS, dataTypes::EMPTY, STATE_GET_SETTINGS },
+  { jsonStates::INFO, dataTypes::EMPTY, STATE_INFO },
+  { jsonStates::HELP, dataTypes::EMPTY, STATE_HELP }
 };
 
 
@@ -262,6 +274,7 @@ const char *const jsonCmdRange[] PROGMEM = {
 // 5. Finally Declare a structure that will hold both the jsonStates enum, and any data that will need to be passed from jsonMessenger, into the states.
 // We can make this fairly generic by including additional datatypes, or we can reduce the size of the memory used by removing the unneeded ones
 struct jsonStateData {
+  stateDef stateEnum;   // This likely supercedes the commandState enum, as we can just direcly plug this variable into smState, saving another list of if/elses
   jsonStates cmdState;  // The command state enum to tell state machine what state to go to next
   dataTypes data_type;  // The type of data being passed along with structure (though state should know what data to expect anyway), this could be removed to save space
   int16_t signedInt;    // empty generic data slots for each data type

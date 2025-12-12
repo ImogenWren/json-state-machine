@@ -8,7 +8,12 @@ Sketch uses 27062 bytes (88%) of program storage space. Maximum is 30720 bytes.
 Global variables use 1043 bytes (50%) of dynamic memory, leaving 1005 bytes for local variables. Maximum is 2048 bytes.
 - excessive use of switch case and if/else lists
 
-Version 2.0
+
+Version 2.0 changed jsonMessenger to use map structure isntead of array, and simplify main loop code by passing new state enum directly
+Sketch uses 26224 bytes (85%) of program storage space. Maximum is 30720 bytes.
+Global variables use 1062 bytes (51%) of dynamic memory, leaving 986 bytes for local variables. Maximum is 2048 bytes.
+
+Version 2.1
 - going back to using this structure to try and cut down on manual typing
 
     (*StateMachine[SmState].func)();
@@ -91,44 +96,9 @@ void loop() {
     Serial.println("\"}");
 
     // This is the bit that parses the command recieved by user, and sets the state machine to go to the correct state
-    if (nextState_data.cmdState == SERVO) {  // if fan speed change command received
-      smState = STATE_SERVO;
-    } else if (nextState_data.cmdState == HOME) {
-      smState = STATE_HOME;
-    } else if (nextState_data.cmdState == TARE) {
-      smState = STATE_TARE;
-    } else if (nextState_data.cmdState == SAMPLERATE) {
-      smState = STATE_SAMPLERATE;
-    } else if (nextState_data.cmdState == PRINTRATE) {
-      smState = STATE_PRINTRATE;
-    } else if (nextState_data.cmdState == STARTSTREAM) {
-      smState = STATE_STARTSTREAM;
-    } else if (nextState_data.cmdState == ENDSTREAM) {
-      smState = STATE_STOPSTREAM;
-    } else if (nextState_data.cmdState == SET_SECRET) {
-      smState = STATE_SETSECRET;
-    } else if (nextState_data.cmdState == SET_CAL) {
-      smState = STATE_SET_CAL;
-    } else if (nextState_data.cmdState == GET_CAL) {
-      smState = STATE_GET_CAL;
-    } else if (nextState_data.cmdState == SET_MATERIAL) {
-      smState = STATE_SET_MATERIAL;
-    } else if (nextState_data.cmdState == SET_DIAMETER) {
-      smState = STATE_SET_DIAMETER;
-    } else if (nextState_data.cmdState == SET_ANGLEMAX) {
-      smState = STATE_SET_ANGLEMAX;
-    } else if (nextState_data.cmdState == SET_LOADMAX) {
-      smState = STATE_SET_LOADMAX;
-    } else if (nextState_data.cmdState == GET_SETTINGS) {
-      smState = STATE_GET_SETTINGS;
-    } else if (nextState_data.cmdState == INFO) {
-      smState = STATE_INFO;
-    } else if (nextState_data.cmdState == HELP) {
-      smState = STATE_HELP;
-    } else {
-      // std::cout << "{\"WARNING\":\"Unrecognised cmdState\"}" << std::endl;
-      Serial.println(F("{\"WARNING\":\"Unrecognised cmdState\"}"));
-    }
+    if (nextState_data.stateEnum != STATE_NULL) {  // if fan speed change command received
+      smState = nextState_data.stateEnum;
+    } 
   }
   sm_Run(nextState_data);  // This Runs the state machine in the correct state, and is passed all of the data sent by the last command
 
@@ -138,7 +108,7 @@ void loop() {
 
 
 
-  //Load Cell
+
 
 
   // Do sampling Data at the specified rate
@@ -162,49 +132,18 @@ void loop() {
 
 
 
-// Periodic Measurements & limits
-// angle limit
+// Periodic Measurements & limits go here -> they might use data sampled above to make decisions
 #if LIMITS_ENABLED == true
-  if (servo_pos > 5) {
-    if (encoder_angle_array[0] >= settings.angleMax) {
-      smState = STATE_HOME;  // if it exceeds limit, go to home state
-      Serial.println(F("{\"ERROR\":\"angle limit exceeded, homing\"}"));
-    } else if (encoder_angle_array[0] >= (settings.angleMax - ANGLE_SOFT_LIMIT_WIDTH)) {
-      Serial.println(F("{\"WARNING\":\"angle limit -> extension disabled\"}"));
-      // set flag to tell servo state not to extend servo
-      ANGLE_SOFT_LIMIT = true;
-    } else {
-      ANGLE_SOFT_LIMIT = false;
-    }
 
-    // load limit
-    if (loadcell_array[0] >= settings.loadMax) {
-      smState = STATE_HOME;  // if it exceeds limit, go to home state
-      Serial.println(F("{\"ERROR\":\"load limit exceeded, homing\"}"));
-    } else if (loadcell_array[0] >= (settings.loadMax - LOAD_SOFT_LIMIT_WIDTH)) {
-      Serial.println(F("{\"WARNING\":\"load limit -> extension disabled\"}"));
-      // set flag to tell servo state not to extend servo
-      LOAD_SOFT_LIMIT = true;
-    } else {
-      LOAD_SOFT_LIMIT = false;
-    }
-  }
-#endif
-  // load limit
-
-
-
-  // Limit Switch Management
-  limit.buttonLoop(750);  // long int passed controls the time required for a long press. (defaults to 1 second)
-#if LIMIT_SWITCH_ENABLED == true
-  if (limit.buttonPress) {
-    led.callBlink(3, 200, 200);
-    limit.buttonReset();
-    smState = STATE_HOME;
-  }
 #endif
 
-  led.performBlink();
+
+
+
+
+
+
+
 
 
 
@@ -221,14 +160,11 @@ void loop() {
   } else {
     samples_written = 0;  // this still needs to be reset to allow data to be collected for other purposes (limits etc)
   }
+
+
   // Time Out Tools and utility loop functions
-  // Fix for servo chattering, servo is attached during PING state, and unattached on timer
-  //  if (servo.attached()) {
-  //   if (millis() - servo_attach_time_mS >= SERVO_TIMEOUT_mS) {
-  //     servo.detach();
-  //     Serial.println("Servo Unattached");
-  //   }
-  //  }
+    led.performBlink();
+
 }
 
 

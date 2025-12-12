@@ -39,7 +39,7 @@ void jsonMessenger::printJSON(StaticJsonDocument<JSON_RX_SIZE> *jsonDoc) {
 
 jsonStateData jsonMessenger::jsonReadSerialLoop() {
 
-  jsonStateData jsonRX_data = { NONE, EMPTY, 0, 0, 0.0, "", "", false };  // Default message that will be passed out if no data received or cannot be parsed
+  jsonStateData jsonRX_data = {STATE_NULL, NONE, EMPTY, 0, 0, 0.0, "", "", false };  // Default message that will be passed out if no data received or cannot be parsed
 
   if (Serial.available() > 0) {
     //Serial.println("Serial Available");
@@ -95,7 +95,7 @@ jsonStateData jsonMessenger::jsonReadSerialLoop() {
 
       if (root.containsKey(jsonCommandKeys[i]) || strcmp(keyString, jsonCommandKeys[i]) == 0) {  // Match is found, i holds the correct ENUM reference for the state
 
-        jsonRX_data.data_type = dataTypes_array[jsonStateMap[i][1]];  // this should contain the correct enum for the datatype
+        jsonRX_data.data_type = dataTypes_array[jsonStateMap[i].data_type];  // this should contain the correct enum for the datatype
 
 #if DEBUG_JSON_MESSENGER == true
         Serial.print(F("{\"key\":\""));
@@ -103,20 +103,21 @@ jsonStateData jsonMessenger::jsonReadSerialLoop() {
         Serial.print(F("\",\"num\":\""));
         Serial.print(i);
         Serial.print(F("\",\"dataType\":\""));
-        Serial.print(jsonStateMap[i][1]);
+        Serial.print(jsonStateMap[i].data_type);
         Serial.print("\",\"typeName\":\"");
-        Serial.print(typeNames[jsonStateMap[i][1]]);
+     //  Serial.print(typeNames[jsonStateMap[i].dataType]);
         Serial.print("\",");
         // Set the flags to trigger the state change
         Serial.print("\"state\":\"");
-        Serial.print(jsonStateMap[i][0]);
+        Serial.print(jsonStateMap[i].cmd);
         Serial.print("\",");
         Serial.print(F("\"data\":\""));
 #endif
 
 
         //  jsonRX_data.cmdState = i;  //
-        jsonRX_data.cmdState = jsonStates(jsonStateMap[i][0]);  // these two lines should be identical, except one passes the ENUM, the other (the same) int value
+     //   jsonRX_data.stateEnum = jsonStates(jsonStateMap[i].state);  // these two lines should be identical, except one passes the ENUM, the other (the same) int value
+        jsonRX_data.cmdState = jsonStates(jsonStateMap[i].cmd);  // these two lines should be identical, except one passes the ENUM, the other (the same) int value
         jsonRX_data.cmd_received = true;                        //Set flag to be passed outside of library and notify a command has been sent (depreciated if using queue)
 
 

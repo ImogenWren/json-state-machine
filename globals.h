@@ -22,7 +22,11 @@
 #include <autoDelay.h>
 
 // User Created and Owned Libraries
-#include "jsonMessenger.h"
+
+#include "stateConfig.h"    // must always be first as jsonConfig uses variables within
+#include "jsonConfig.h"     
+#include "jsonMessenger.h"  // jsonMessenger also relies on variables desifined in jsonConfig
+// stateMachine is defined at the end of this file, as it needs access to all globals
 
 // Program Attributes
 #define EXPERIMENT_NAME "torsion-lab"
@@ -173,6 +177,7 @@ int16_t samples_written = 0;
 
 // Include headers that need to pull from globals right at the end
 #include "smoothServo.h"
-#include "stateConfig.h"
+//#include "stateConfig.h"  // now included in jsonConfig?
+#include "stateMachine.h"
 #include "jsonReporter.h"
 #include "utilityFunctions.h"

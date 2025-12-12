@@ -11,7 +11,8 @@ NOTE: This library is memory intensive and may not be suitable for lightweight m
 Version V1.0.0
 - Focus on receiving & parsing incoming Serial CMD messages in JSON format
 
-
+Version v3
+- Tying everything together finally
 
 
 */
@@ -34,7 +35,7 @@ Version V1.0.0
 
 #include "jsonConfig.h"
 
-#define JSON_MESSENGER_VERSION 2.0.0
+#define JSON_MESSENGER_VERSION 3.0.0
 
 
 
