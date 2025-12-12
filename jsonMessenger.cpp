@@ -183,6 +183,23 @@ jsonStateData jsonMessenger::jsonReadSerialLoop() {
           Serial.print(" auth: ");
           Serial.print(jsonRX_data.auth);
 #endif
+        } else if (jsonRX_data.data_type == AUTH_FLOAT) {  // if auth then two datas must be extracted
+          const char *extract_secret;
+          if (set_keyword_used) {
+            jsonRX_data.floatData = jsonRXdoc["to"].as<float>();
+          } else {
+            jsonRX_data.floatData = jsonRXdoc[jsonCommandKeys[i]].as<float>();
+          }
+          extract_secret = jsonRXdoc["auth"].as<const char *>();                                       // this will always use auth keyword
+          jsonMessenger::safe_copy_string(jsonRX_data.auth, extract_secret, sizeof jsonRX_data.auth);  //// new version using strcpy and wrapped in function
+                                                                                                       //  memcpy(jsonRX_data.auth, extract_secret, AUTH_MSG_LENGTH-1);  // old version using memcpy
+                                                                                                       //   jsonRX_data.auth[AUTH_MSG_LENGTH-1] = '\0';
+#if DEBUG_JSON_MESSENGER == true
+          Serial.print("data: ");
+          Serial.print(jsonRX_data.floatData);
+          Serial.print(" auth: ");
+          Serial.print(jsonRX_data.auth);
+#endif
         } else if (jsonRX_data.data_type == AUTH_MSG) {  // if auth then two datas must be extracted
           const char *extract_msg;
           const char *extract_secret;

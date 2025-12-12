@@ -377,6 +377,7 @@ void sm_state_set_secret(jsonStateData stateData) {
 
 
 
+
 void sm_state_set_cal(jsonStateData stateData) {
   if (lastState != smState) {
 #if DEBUG_STATES == true
@@ -385,10 +386,11 @@ void sm_state_set_cal(jsonStateData stateData) {
     lastState = smState;
   //  Serial.println(stateData.signedInt);
   //  Serial.println(stateData.auth);
-    memory.set_cal_value(stateData.signedInt, stateData.auth);
+    memory.set_cal_value(stateData.floatData, stateData.auth);
   }
   smState = STATE_WAIT;
 }
+
 
 
 

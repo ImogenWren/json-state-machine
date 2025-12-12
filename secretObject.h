@@ -52,7 +52,7 @@ public:
   // Public Calibration struct -> modify for specific use case (needed to pass cal data + flag out of library)
   struct calStruc {
     bool calValid;
-    int16_t calData;
+    float calData;
   };
 
   // keeping these two structures seperate as changing one does not always neccessitate changing the other
@@ -77,7 +77,7 @@ public:
   secretObject::calStruc get_cal();
   secretObject::settingsStruc get_settings();
   void set_secret(const char *secret);
-  void set_cal_value(int16_t calValue, const char *secret);
+  void set_cal_value(float calValue, const char *secret);
   void set_settings_data(const char *material, const char *diameter, int16_t angleMax, int16_t loadMax, const char *secret);  // this would be a fantastic way of building this functionality, however due to limitations in jsonMessenger, its not going to work
   void set_material(const char *material, const char *secret);                                                                // These individal functions are going to be the only way to implement this for now
   void set_diameter(const char *diameter, const char *secret);
@@ -110,7 +110,7 @@ private:
     char diameter[8];
     int16_t angleMax;
     int16_t loadMax;
-    int16_t calData;  // Scale factors / calibration / offset data
+    float calData;  // Scale factors / calibration / offset data
   };
 
   // Create a global "Calibration" variable and call it cal

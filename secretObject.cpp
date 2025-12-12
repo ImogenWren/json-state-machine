@@ -172,7 +172,7 @@ bool secretObject::cal_pre_check(secretObject::Calibration calStruc, const char 
 
 
 //## MODIFIED -> Check Function
-void secretObject::set_cal_value(int16_t calValue, const char *secret) {
+void secretObject::set_cal_value(float calValue, const char *secret) {
   //cal = cal_store.read();
   // get the Calibration structure from persistant memory
   EEPROM.get(EEPROM_START_ADDRESS, cal);

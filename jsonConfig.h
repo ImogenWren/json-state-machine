@@ -71,6 +71,7 @@ typedef enum {  // enum to pass variable types between functions
   CSTRING,
   BOOL,
   AUTH_INT,  // 14/07/25 adding new datatype, this will tell jsonMessenger that 2 datas will be present, but will use already existing datatypes in RX data structure
+  AUTH_FLOAT, // 12/12/25 auth with float data
   AUTH_MSG   // 27/11/25 adding new datatype, auth with char message
 } dataTypes;
 
@@ -90,6 +91,7 @@ static char typeNames[][8] = {
   "CSTRING",
   "BOOL",
   "AUTHINT",
+  "AUTHFLT",
   "AUTHMSG"
 };
 
@@ -138,7 +140,7 @@ const uint16_t jsonStateMap[NUM_VALUES][2] = {
   { jsonStates::ENDSTREAM, dataTypes::EMPTY },
 
   { jsonStates::SET_SECRET, dataTypes::CSTRING },
-  { jsonStates::SET_CAL, dataTypes::AUTH_INT },
+  { jsonStates::SET_CAL, dataTypes::AUTH_FLOAT },
   { jsonStates::GET_CAL, dataTypes::EMPTY },
   { jsonStates::SET_MATERIAL, dataTypes::AUTH_MSG },
   { jsonStates::SET_DIAMETER, dataTypes::AUTH_MSG },
