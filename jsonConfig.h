@@ -78,15 +78,16 @@ static char typeNames[][8] = {
   "AUTHMSG"
 };
 
+
+
 #pragma GCC diagnostic pop
-
-
 
 // 2. Declare a list of all possible key values as ENUM. These values will be passed out of the jsonMessenger Object and can be used to trigger different states
 // NOTE: this list may not include all possible states for the state machine, JUST the states that are triggered by receiving a command.
 // - Include a null value at 0 -> This is because this enum will be initialised at 0 to represent jsonMessenger not receiving data, or being unable to parse a command
 
 // NEW INSTRUCTION -> This list is likely depreciated and Is only here currently for legacy reasons, it may be removed in the next version
+/*
 typedef enum {
   NONE,  // Include null or none state
   SERVO,
@@ -108,7 +109,7 @@ typedef enum {
   HELP,
   NUM_VALUES  // Add sentinal NUM_VALUES to count number of elements, this is very important and will be used to size for loops inside the jsonMessenger object
 } jsonStates;
-
+*/
 
 
 // these are just to silence compiler warnings, maybe there is a better way of doing this but I havnt figured it out yet
@@ -152,6 +153,8 @@ typedef struct {
   stateDef state;
 } jsonStateMapData_t;
 
+
+/*
 const jsonStateMapData_t jsonStateMap[NUM_VALUES] = {
   { jsonStates::NONE, dataTypes::EMPTY, STATE_NULL },
   { jsonStates::SERVO, dataTypes::INTEGER, STATE_SERVO },
@@ -173,7 +176,7 @@ const jsonStateMapData_t jsonStateMap[NUM_VALUES] = {
   { jsonStates::INFO, dataTypes::EMPTY, STATE_INFO },
   { jsonStates::HELP, dataTypes::EMPTY, STATE_HELP }
 };
-
+*/
 
 
 

@@ -51,7 +51,7 @@ void update_json(int16_t num_samples) {
   StaticJsonDocument<JSON_TX_BUFFER_SIZE> jsonTX;
 
 
-  char float_buffer[10];  // buffer to holf fixed length floats
+  char float_buffer[10];  // buffer to hold fixed length floats
   //freeRAM = ram.getPrintStats("update_json");
   // Header
   jsonTX[F("timestamp")].set(millis());  //Message Timestamp set this last before printing
@@ -61,16 +61,16 @@ void update_json(int16_t num_samples) {
                                          // jsonTX[F("payload")][F("state")].set(stateNames[smState]);
 
   // new method to get state name text from progmem
-   char buffer[14];
-   strcpy_P(buffer, (char*)pgm_read_ptr(&(stateNames[smState])));  // Necessary casts and dereferencing, just copy.
-    jsonTX[F("payload")][F("state")].set(buffer);
+  char buffer[14];
+  strcpy_P(buffer, (char *)pgm_read_ptr(&(stateNames[smState])));  // Necessary casts and dereferencing, just copy.
+  jsonTX[F("payload")][F("state")].set(buffer);
 
 
   //char buffer[13];
   //const char *ptr = (const char *)pgm_read_word(&stateNames[smState]);
- // strncpy_P(buffer, ptr, sizeof(buffer));
- // buffer[sizeof(buffer) - 1] = "\0";
- // jsonTX[F("payload")][F("state")].set(buffer);
+  // strncpy_P(buffer, ptr, sizeof(buffer));
+  // buffer[sizeof(buffer) - 1] = "\0";
+  // jsonTX[F("payload")][F("state")].set(buffer);
 
   // jsonTX[F("payload")][F("state")][F("val")].set(smState);  only needed for debugging state machine
 

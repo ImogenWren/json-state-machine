@@ -23,7 +23,10 @@ A little more memory intensive but much less typing dependent.
     commands directly in the map, 
     - also may be able to PROGMEM the commands list, though this will require a small re-write of jsonMessenger.cpp to get those values from PROGMEM during runtime.
 
-    (*StateMachine[SmState].func)();
+// bug fixes for above
+Sketch uses 25228 bytes (82%) of program storage space. Maximum is 30720 bytes.
+Global variables use 1144 bytes (55%) of dynamic memory, leaving 904 bytes for local variables. Maximum is 2048 bytes.
+   
 
 
 */
@@ -84,29 +87,17 @@ void loop() {
 
 
   if (nextState_data.cmd_received) {  // If command is receive   //delay(10);
+    Serial.println("command received");
 
 
-   // const char* cmd = jsonRX.getCMDkey(nextState_data.cmdState);  // I feel like the entire point of using ENUMs is being totally lost by doing this, but it is working
- 
- /*   //std::cout << std::endl;
-    // std::cout << "{\"rx-cmd\":\"" << cmd << "\",\"datatype\":\"" << jsonRX.getDataType(nextState_data.data_type) << "\",\"data\":\"";
-    Serial.print(F("{\"rx-cmd\":\""));
-    Serial.print(cmd);
-    Serial.print(F("\",\"datatype\":\""));
-    Serial.print(jsonRX.getDataType(nextState_data.data_type));
-    Serial.print(F("\",\"data\":\""));
-    if (nextState_data.data_type == INTEGER) Serial.print(nextState_data.signedInt);  //std::cout << nextState_data.signedInt;
-    if (nextState_data.data_type == FLOAT) Serial.print(nextState_data.floatData);    //std::cout << nextState_data.floatData;
-    if (nextState_data.data_type == CSTRING) Serial.print(nextState_data.msg);        //std::cout << nextState_data.msg;
-    if (nextState_data.data_type == EMPTY) Serial.print("n/a");                       //std::cout << "n/a";
-    // Is this now missing float clause?
-    //std::cout << "\"}" << std::endl;
-    Serial.println("\"}");
-*/
     // This is the bit that parses the command recieved by user, and sets the state machine to go to the correct state
-    if (nextState_data.stateEnum != STATE_NULL) {  // if fan speed change command received
+    if (nextState_data.stateEnum != STATE_NULL) { 
+      Serial.println("State Not Null");
+      Serial.print("State: ");
+      Serial.println();
       smState = nextState_data.stateEnum;
-    } 
+      Serial.println(smState);
+    }
   }
   sm_Run(nextState_data);  // This Runs the state machine in the correct state, and is passed all of the data sent by the last command
 
@@ -171,8 +162,7 @@ void loop() {
 
 
   // Time Out Tools and utility loop functions
-    led.performBlink();
-
+  led.performBlink();
 }
 
 

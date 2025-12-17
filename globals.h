@@ -29,7 +29,7 @@
 // stateMachine is defined at the end of this file, as it needs access to all globals
 
 // Program Attributes
-#define EXPERIMENT_NAME "torsion-lab"
+#define EXPERIMENT_NAME "json-state-machine-example"
 #define FIRMWARE_VERSION "V1.0.3"
 #define DEVELOPER "Imogen-Heard"
 
@@ -64,7 +64,7 @@
 #define SERVO_OPEN_uS 2200
 
 // JSON Reporting
-#define PRINT_JSON true
+#define PRINT_JSON false
 #define PRETTY_PRINT_JSON false
 #define JSON_TX_BUFFER_SIZE 240
 
@@ -77,8 +77,8 @@
 #define EEPROM_ADDRESS 0xFF  // EEPROM location for calibration data if required
 
 // Debugging
-#define DEBUG_STATES false
-#define DEBUG_STATE_MACHINE false
+#define DEBUG_STATES true
+#define DEBUG_STATE_MACHINE true
 
 
 

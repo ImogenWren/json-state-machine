@@ -41,7 +41,7 @@ void print_cmds() {
   Serial.println(F("{\"setdia \" : \"char[8],\"auth\\\":\"char[8]\"  , \"desc\" : \"set diameter\"}"));
   Serial.println(F("{\"setang \" : \"uint,\"auth\":\"char[8]\"     \", \"desc\" : \"set angle max\"}"));
   Serial.println(F("{\"setload\" : \"int,\"auth\":\"char[8]\"      \", \"desc\" : \"set load max  \"}"));
-  Serial.println(F("{\"recall\" :  \"null\", \"desc\" : \"get settings from memory \"}"));
-  Serial.println(F("{\"info   \" : \"null\", \"desc\" : \"print settings, cal data & validity \"}"));
-  Serial.println(F("{\"help   \" : \"null\", \"desc\" : \"print commands list\"}"));
+  Serial.println(F("{\"recall\"  :  \"null\", \"desc\" : \"get settings from memory \"}"));
+  Serial.println(F("{\"info\"    : \"null\", \"desc\" : \"print settings, cal data & validity \"}"));
+  Serial.println(F("{\"help\"    : \"null\", \"desc\" : \"print commands list\"}"));
 }

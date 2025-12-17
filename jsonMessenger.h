@@ -62,7 +62,7 @@ public:
 
   void printJSONdata(jsonStateData_t *data);
 
-//  void print_cmds();
+  //  void print_cmds();
 
 #if JSON_USE_QUEUE == true
   int8_t enque_cmd(jsonStateData_t *newItem);  // Returns the number of items in the queue, or -1 on fail
@@ -71,7 +71,7 @@ public:
 #endif
 
 private:
-  void safe_copy_string(char *target,const char *newString, uint8_t targetLength);
+  void safe_copy_string(char *target, const char *newString, uint8_t targetLength);
 
 #if JSON_USE_QUEUE == true
   jsonStateData_t jsonQueue[CMD_QUEUE_LENGTH];
