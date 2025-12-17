@@ -29,6 +29,10 @@ Global variables use 1144 bytes (55%) of dynamic memory, leaving 904 bytes for l
   
 Version 2.2
 - Removed all code specific to last implementation
+Sketch uses 21988 bytes (71%) of program storage space. Maximum is 30720 bytes.
+Global variables use 970 bytes (47%) of dynamic memory, leaving 1078 bytes for local variables. Maximum is 2048 bytes.
+
+now implementing removing the jsonState enums as they are redundent
 
 
 */
