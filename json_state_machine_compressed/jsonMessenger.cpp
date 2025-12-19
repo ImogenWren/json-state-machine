@@ -41,7 +41,7 @@ void jsonMessenger::printJSON(StaticJsonDocument<JSON_RX_SIZE> *jsonDoc) {
 
 jsonStateData_t jsonMessenger::jsonReadSerialLoop() {
 
-  jsonStateData_t jsonRX_data = { STATE_NULL, NONE, EMPTY, 0, 0, 0.0, "", "", false };  // Default message that will be passed out if no data received or cannot be parsed
+  jsonStateData_t jsonRX_data = { STATE_NULL, EMPTY, 0, 0, 0.0, "", "", false };  // Default message that will be passed out if no data received or cannot be parsed
 
   if (Serial.available() > 0) {
     //Serial.println("Serial Available");
@@ -90,7 +90,7 @@ jsonStateData_t jsonMessenger::jsonReadSerialLoop() {
       set_keyword_used = true;  // if set has been used, then we need to extract the data in a slightly different way
     }
 
-    for (int i = 0; i < NUM_VALUES; i++) {
+    for (int i = 0; i < NUM_CMDS; i++) {
       //  Serial.print(i);  // loop through all the keys
       //  Serial.print("  Checking against key: ");
       //  Serial.println(jsonCommandKeys[i]);
@@ -133,7 +133,7 @@ jsonStateData_t jsonMessenger::jsonReadSerialLoop() {
           if (set_keyword_used) {
             jsonRX_data.signedInt = jsonRXdoc["to"].as<int16_t>();
           } else {
-            jsonRX_data.signedInt = jsonRXdoc[jsonCommandKeys[i]].as<int16_t>();
+            jsonRX_data.signedInt = jsonRXdoc[jsonStateMap[i].cmd].as<int16_t>();
           }
 #if DEBUG_JSON_MESSENGER == true
           Serial.print(jsonRX_data.signedInt);
@@ -142,7 +142,7 @@ jsonStateData_t jsonMessenger::jsonReadSerialLoop() {
           if (set_keyword_used) {
             jsonRX_data.uInt = jsonRXdoc["to"].as<uint16_t>();
           } else {
-            jsonRX_data.uInt = jsonRXdoc[jsonCommandKeys[i]].as<uint16_t>();
+            jsonRX_data.uInt = jsonRXdoc[jsonStateMap[i].cmd].as<uint16_t>();
           }
 #if DEBUG_JSON_MESSENGER == true
           Serial.print(jsonRX_data.uInt);
@@ -152,7 +152,7 @@ jsonStateData_t jsonMessenger::jsonReadSerialLoop() {
             jsonRX_data.floatData = root["to"].as<float>();
           } else {
             // jsonRX_data.floatData = jsonRXdoc[jsonCommandKeys[i]].as<float>();   // this line not working and stalling everything ( may have been unrelated!)
-            jsonRX_data.floatData = root[jsonCommandKeys[i]].as<float>();  // try extracted from root doc instead
+            jsonRX_data.floatData = root[jsonStateMap[i].cmd].as<float>();  // try extracted from root doc instead
           }
 #if DEBUG_JSON_MESSENGER == true
           Serial.print(jsonRX_data.floatData);
@@ -162,7 +162,7 @@ jsonStateData_t jsonMessenger::jsonReadSerialLoop() {
           if (set_keyword_used) {
             extracted = jsonRXdoc["to"].as<const char *>();
           } else {
-            extracted = jsonRXdoc[jsonCommandKeys[i]].as<const char *>();
+            extracted = jsonRXdoc[jsonStateMap[i].cmd].as<const char *>();
           }
           memcpy(jsonRX_data.msg, extracted, JSON_MSG_LENGTH);
           jsonRX_data.msg[JSON_MSG_LENGTH - 1] = '\0';
@@ -174,7 +174,7 @@ jsonStateData_t jsonMessenger::jsonReadSerialLoop() {
           if (set_keyword_used) {
             jsonRX_data.signedInt = jsonRXdoc["to"].as<int16_t>();
           } else {
-            jsonRX_data.signedInt = jsonRXdoc[jsonCommandKeys[i]].as<int16_t>();
+            jsonRX_data.signedInt = jsonRXdoc[jsonStateMap[i].cmd].as<int16_t>();
           }
           extract_secret = jsonRXdoc["auth"].as<const char *>();                                       // this will always use auth keyword
           jsonMessenger::safe_copy_string(jsonRX_data.auth, extract_secret, sizeof jsonRX_data.auth);  //// new version using strcpy and wrapped in function
@@ -191,7 +191,7 @@ jsonStateData_t jsonMessenger::jsonReadSerialLoop() {
           if (set_keyword_used) {
             jsonRX_data.floatData = jsonRXdoc["to"].as<float>();
           } else {
-            jsonRX_data.floatData = jsonRXdoc[jsonCommandKeys[i]].as<float>();
+            jsonRX_data.floatData = jsonRXdoc[jsonStateMap[i].cmd].as<float>();
           }
           extract_secret = jsonRXdoc["auth"].as<const char *>();                                       // this will always use auth keyword
           jsonMessenger::safe_copy_string(jsonRX_data.auth, extract_secret, sizeof jsonRX_data.auth);  //// new version using strcpy and wrapped in function
@@ -210,7 +210,7 @@ jsonStateData_t jsonMessenger::jsonReadSerialLoop() {
           if (set_keyword_used) {
             extract_msg = jsonRXdoc["to"].as<const char *>();
           } else {
-            extract_msg = jsonRXdoc[jsonCommandKeys[i]].as<const char *>();
+            extract_msg = jsonRXdoc[jsonStateMap[i].cmd].as<const char *>();
           }
           jsonMessenger::safe_copy_string(jsonRX_data.msg, extract_msg, sizeof jsonRX_data.msg);
           // then use similar method for auth msg
@@ -239,7 +239,7 @@ jsonStateData_t jsonMessenger::jsonReadSerialLoop() {
 #endif
         return jsonRX_data;  // return the structure as the data has been extracted
       } else {
-        if (i == NUM_VALUES - 1) {  // if i = NUM_VALUES we have reached the end of the for loop, if no match has been found, print the unknown cmd
+        if (i == NUM_CMDS - 1) {  // if i = NUM_VALUES we have reached the end of the for loop, if no match has been found, print the unknown cmd
           Serial.println(F("{\"cmd\":\"unknown\"}"));
         }
         // We have pre-parsed the alternative set command so now else doesnt need to do anything
@@ -257,10 +257,10 @@ jsonStateData_t jsonMessenger::jsonReadSerialLoop() {
 
 
 
-const char *jsonMessenger::getCMDkey(jsonStates state) {
+//const char *jsonMessenger::getCMDkey(jsonStates state) {
   //std::cout << jsonCommandKeys[state] << "\0";
-  return jsonCommandKeys[state];
-}
+ // return jsonStateMap[state].cmd;
+//}
 
 const char *jsonMessenger::getDataType(dataTypes type) {
   //std::cout << typeNames[type] << "\0";
@@ -268,8 +268,8 @@ const char *jsonMessenger::getDataType(dataTypes type) {
 }
 
 void jsonMessenger::printJSONdata(jsonStateData_t *data) {  // Use -> to assess members of a pointer to a struct
-  Serial.print(F("cmdState: "));
-  Serial.print(jsonMessenger::getCMDkey(data->cmdState));
+ // Serial.print(F("state: "));
+ // Serial.print(jsonMessenger::getCMDkey(data->stateEnum));   // this no longer works as there is no way to back translate the current state back into the command, but we can just print the actual triggered state, though this is now saved in PROGMEM so is a pain. Excluding for now
   Serial.print(F(" dataType: "));
   jsonMessenger::getDataType(data->data_type);
   Serial.print(F(" signedInt: "));

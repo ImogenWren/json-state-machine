@@ -82,63 +82,8 @@ static char typeNames[][8] = {
 
 #pragma GCC diagnostic pop
 
-// 2. Declare a list of all possible key values as ENUM. These values will be passed out of the jsonMessenger Object and can be used to trigger different states
-// NOTE: this list may not include all possible states for the state machine, JUST the states that are triggered by receiving a command.
-// - Include a null value at 0 -> This is because this enum will be initialised at 0 to represent jsonMessenger not receiving data, or being unable to parse a command
-
-/*
-typedef enum {
-  NONE,  // Include null or none state
-  SERVO,
-  HOME,
-  TARE,
-  SAMPLERATE,
-  PRINTRATE,
-  STARTSTREAM,
-  ENDSTREAM,
-  SET_SECRET,
-  SET_CAL,
-  GET_CAL,
-  SET_MATERIAL,
-  SET_DIAMETER,
-  SET_ANGLEMAX,
-  SET_LOADMAX,
-  GET_SETTINGS,
-  INFO,
-  HELP,
-  NUM_VALUES  // Add sentinal NUM_VALUES to count number of elements, this is very important and will be used to size for loops inside the jsonMessenger object
-} jsonStates;
-*/
 
 
-// these are just to silence compiler warnings, maybe there is a better way of doing this but I havnt figured it out yet
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-variable"
-
-/*
-// 4. Declare a list of key commands that will be required to be parsed. This must match the order of the enums above
-static char jsonCommandKeys[][8] = {
-  "na",
-  "servo",
-  "home",
-  "tare",
-  "sample",
-  "print",
-  "stream",
-  "endst",
-  "secret",
-  "cal",
-  "getcal",
-  "setmat",
-  "setdia",
-  "setang",
-  "setload",
-  "recall",
-  "info",
-  "help"
-};
-*/
-#pragma GCC diagnostic pop
 
 
 // 3. Link each jsonState ENUM with the datatype ENUM in a ~~map~~<depreciated> structure -> Now uses 2D array!.
@@ -148,7 +93,7 @@ static char jsonCommandKeys[][8] = {
 
 
 typedef struct {
-  static char cmd[8];   //< Defines the command
+  const char cmd[8];   //< Defines the command
   dataTypes data_type;  //< Defines the ENUM for the data type
   stateDef state;
 } jsonStateMapData_t;
@@ -176,7 +121,7 @@ const jsonStateMapData_t jsonStateMap[] = {
   { "help",     dataTypes::EMPTY,         STATE_HELP }
 };
 
-
+const uint8_t NUM_CMDS = 18;
 
 
 

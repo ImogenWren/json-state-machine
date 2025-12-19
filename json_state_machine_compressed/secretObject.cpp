@@ -45,10 +45,10 @@ secretObject::calStruc secretObject::get_cal() {
   // cal = cal_store.read();
   EEPROM.get(EEPROM_START_ADDRESS, cal);
 
-//  secretObject::report_cal();
+  secretObject::report_cal();
 
   if (cal.signature != WRITTEN_SIGNATURE) {
-    Serial.println(F("{\"WARNING\":\"signature did not match\"}"));
+    Serial.println(F("{\"WARNING\":\"signature does not match\"}"));
     return memContents;
   }
   if (cal.secure && cal.calValid) {
@@ -79,7 +79,7 @@ secretObject::settingsStruc secretObject::get_settings() {
   EEPROM.get(EEPROM_START_ADDRESS, cal);
 
   // Report mem contents to user?
-  secretObject::report_cal();       // cal yes as this is used just for validation at this stage
+  //  secretObject::report_cal();       // cal yes as this is used just for validation at this stage
   secretObject::report_settings();  // contents, no as this must be passed data after it has been checked for validity (because it might contain arrays that need correct termination)
                                     // this has now been fixed and this function should be safe to call here now
 
