@@ -29,28 +29,28 @@ stateDef lastState;
 
 // 4. Define the state machine function prototypes.
 //    Any function that will be passed data from a user input will be passed the same jsonStateData_t structure as an argument.
-void sm_state_null(jsonStateData_t stateData);
-void sm_state_init(jsonStateData_t stateData);
-void sm_state_wait(jsonStateData_t stateData);
-void sm_state_servo(jsonStateData_t stateData);
-void sm_state_home(jsonStateData_t stateData);
-void sm_state_tare(jsonStateData_t stateData);
-void sm_state_samplerate(jsonStateData_t stateData);
-void sm_state_printrate(jsonStateData_t stateData);
-void sm_state_start_stream(jsonStateData_t stateData);
-void sm_state_stop_stream(jsonStateData_t stateData);
+void sm_state_null(jsonStateData_t &stateData);
+void sm_state_init(jsonStateData_t &stateData);
+void sm_state_wait(jsonStateData_t &stateData);
+void sm_state_servo(jsonStateData_t &stateData);
+void sm_state_home(jsonStateData_t &stateData);
+void sm_state_tare(jsonStateData_t &stateData);
+void sm_state_samplerate(jsonStateData_t &stateData);
+void sm_state_printrate(jsonStateData_t &stateData);
+void sm_state_start_stream(jsonStateData_t &stateData);
+void sm_state_stop_stream(jsonStateData_t &stateData);
 
-// new (or major updates) functions 27/11/25
-void sm_state_set_secret(jsonStateData_t stateData);
-void sm_state_set_cal(jsonStateData_t stateData);
-void sm_state_get_cal(jsonStateData_t stateData);
-void sm_state_set_material(jsonStateData_t stateData);
-void sm_state_set_diameter(jsonStateData_t stateData);
-void sm_state_set_angle_max(jsonStateData_t stateData);
-void sm_state_set_load_max(jsonStateData_t stateData);
-void sm_state_get_settings(jsonStateData_t stateData);
-void sm_state_info(jsonStateData_t stateData);
-void sm_state_help(jsonStateData_t stateData);
+
+void sm_state_set_secret(jsonStateData_t &stateData);
+void sm_state_set_cal(jsonStateData_t &stateData);
+void sm_state_get_cal(jsonStateData_t &stateData);
+void sm_state_set_material(jsonStateData_t &stateData);
+void sm_state_set_diameter(jsonStateData_t &stateData);
+void sm_state_set_angle_max(jsonStateData_t &stateData);
+void sm_state_set_load_max(jsonStateData_t &stateData);
+void sm_state_get_settings(jsonStateData_t &stateData);
+void sm_state_info(jsonStateData_t &stateData);
+void sm_state_help(jsonStateData_t &stateData);
 
 
 // NEW -> (actually old? using function pointers to do the actual state machine)
@@ -58,7 +58,7 @@ void sm_state_help(jsonStateData_t stateData);
 
 typedef struct {
   stateDef State;                           //< Defines thestate enum
-  void (*func)(jsonStateData_t stateData);  //< Defines the function to run
+  void (*func)(jsonStateData_t &stateData);  //< Defines the function to run
 } StateMachine_t;
 
 
@@ -124,13 +124,13 @@ void sm_state_template(jsonStateData_t stateData) {
 }
 */
 
-void sm_state_null(jsonStateData_t stateData) {
-  Serial.println("ERROR: ->NULL STATE ENTERED!");
+void sm_state_null(jsonStateData_t &stateData) {
+  Serial.println(F("ERROR: ->NULL STATE ENTERED!"));
   stateData.uInt++;
 }
 
 // Init state, only called at startup
-void sm_state_init(jsonStateData_t stateData) {
+void sm_state_init(jsonStateData_t &stateData) {
   if (lastState != smState) {
     Serial.println("state: init");
     stateData.uInt++;
@@ -166,7 +166,7 @@ void print_cmds() {
 */
 
 // State Wait is the default state for this program
-void sm_state_wait(jsonStateData_t stateData) {
+void sm_state_wait(jsonStateData_t &stateData) {
   if (lastState != smState) {
     stateData.uInt++;
     // If first iteration print state machine status
@@ -187,7 +187,7 @@ void sm_state_wait(jsonStateData_t stateData) {
 
 // Trigger the servo to tension the torsion bar
 
-void sm_state_servo(jsonStateData_t stateData) {
+void sm_state_servo(jsonStateData_t &stateData) {
   if (lastState != smState) {
 #if DEBUG_STATES == true
     Serial.println(F("state: SERVO"));
@@ -206,7 +206,7 @@ void sm_state_servo(jsonStateData_t stateData) {
 
 
 // Stop the Motor
-void sm_state_home(jsonStateData_t stateData) {
+void sm_state_home(jsonStateData_t &stateData) {
   if (lastState != smState) {
 #if DEBUG_STATES == true
     Serial.println(F("state: HOME"));
@@ -219,7 +219,7 @@ void sm_state_home(jsonStateData_t stateData) {
 
 
 // Start the Motor / Update entered speed in Hz or RPM to output
-void sm_state_tare(jsonStateData_t stateData) {
+void sm_state_tare(jsonStateData_t &stateData) {
   if (lastState != smState) {
 #if DEBUG_STATES == true
     Serial.println(F("state: TARE"));
@@ -236,7 +236,7 @@ void sm_state_tare(jsonStateData_t stateData) {
 
 
 // Change the samplerate of streamed or snapshotted data (Init at 10 Hz)
-void sm_state_samplerate(jsonStateData_t stateData) {
+void sm_state_samplerate(jsonStateData_t &stateData) {
   if (lastState != smState) {
 #if DEBUG_STATES == true
     Serial.println(F("st: SAMPLERATE"));
@@ -261,7 +261,7 @@ void sm_state_samplerate(jsonStateData_t stateData) {
 
 
 // Change the samplerate of streamed or snapshotted data (Init at 10 Hz)
-void sm_state_printrate(jsonStateData_t stateData) {
+void sm_state_printrate(jsonStateData_t &stateData) {
   if (lastState != smState) {
 #if DEBUG_STATES == true
     Serial.println(F("st: PRINT RATE"));
@@ -287,7 +287,7 @@ void sm_state_printrate(jsonStateData_t stateData) {
 
 
 // Start streaming data
-void sm_state_start_stream(jsonStateData_t stateData) {
+void sm_state_start_stream(jsonStateData_t &stateData) {
   if (lastState != smState) {
 #if DEBUG_STATES == true
     Serial.println(F("st: STARTSTREAM"));
@@ -304,7 +304,7 @@ void sm_state_start_stream(jsonStateData_t stateData) {
 
 
 // Stop streaming data
-void sm_state_stop_stream(jsonStateData_t stateData) {
+void sm_state_stop_stream(jsonStateData_t &stateData) {
   if (lastState != smState) {
 #if DEBUG_STATES == true
     Serial.println(F("state: STOPSTREAM"));
@@ -321,7 +321,7 @@ void sm_state_stop_stream(jsonStateData_t stateData) {
 // NEWER FUNCTIONS from here -------------------------------->>>>
 
 // Trigger a snapshot of data to be taken over X amount of time
-void sm_state_set_secret(jsonStateData_t stateData) {
+void sm_state_set_secret(jsonStateData_t &stateData) {
   if (lastState != smState) {
 #if DEBUG_STATES == true
     Serial.println(F("state: SET SECRET"));
@@ -341,7 +341,7 @@ void sm_state_set_secret(jsonStateData_t stateData) {
 
 
 
-void sm_state_set_cal(jsonStateData_t stateData) {
+void sm_state_set_cal(jsonStateData_t &stateData) {
   if (lastState != smState) {
 #if DEBUG_STATES == true
     Serial.println(F("state: SET CAL"));
@@ -359,7 +359,7 @@ void sm_state_set_cal(jsonStateData_t stateData) {
 
 
 
-void sm_state_get_cal(jsonStateData_t stateData) {
+void sm_state_get_cal(jsonStateData_t &stateData) {
   if (lastState != smState) {
 #if DEBUG_STATES == true
     Serial.println(F("state: GET CAL"));
@@ -373,7 +373,7 @@ void sm_state_get_cal(jsonStateData_t stateData) {
 }
 
 
-void sm_state_set_material(jsonStateData_t stateData) {
+void sm_state_set_material(jsonStateData_t &stateData) {
   if (lastState != smState) {
 #if DEBUG_STATES == true
     Serial.println(F("state: SET MATERIAL"));
@@ -385,7 +385,7 @@ void sm_state_set_material(jsonStateData_t stateData) {
 }
 
 
-void sm_state_set_diameter(jsonStateData_t stateData) {
+void sm_state_set_diameter(jsonStateData_t &stateData) {
   if (lastState != smState) {
 #if DEBUG_STATES == true
     Serial.println(F("state: SET DIAMETER"));
@@ -396,7 +396,7 @@ void sm_state_set_diameter(jsonStateData_t stateData) {
   smState = STATE_WAIT;
 }
 
-void sm_state_set_angle_max(jsonStateData_t stateData) {
+void sm_state_set_angle_max(jsonStateData_t &stateData) {
   if (lastState != smState) {
 #if DEBUG_STATES == true
     Serial.println(F("state: SET ANGLE MAX"));
@@ -408,7 +408,7 @@ void sm_state_set_angle_max(jsonStateData_t stateData) {
 }
 
 
-void sm_state_set_load_max(jsonStateData_t stateData) {
+void sm_state_set_load_max(jsonStateData_t &stateData) {
   if (lastState != smState) {
 #if DEBUG_STATES == true
     Serial.println(F("state: SET LOAD MAX"));
@@ -419,7 +419,7 @@ void sm_state_set_load_max(jsonStateData_t stateData) {
   smState = STATE_WAIT;
 }
 
-void sm_state_get_settings(jsonStateData_t stateData) {
+void sm_state_get_settings(jsonStateData_t &stateData) {
   if (lastState != smState) {
 #if DEBUG_STATES == true
     Serial.println(F("state: SET ANGLE MAX"));
@@ -434,7 +434,7 @@ void sm_state_get_settings(jsonStateData_t stateData) {
 
 
 // Print the commands list to the Serial Output
-void sm_state_info(jsonStateData_t stateData) {
+void sm_state_info(jsonStateData_t &stateData) {
   if (lastState != smState) {
 #if DEBUG_STATES == true
     Serial.println(F("state: help"));
@@ -450,7 +450,7 @@ void sm_state_info(jsonStateData_t stateData) {
 
 
 // Print the commands list to the Serial Output
-void sm_state_help(jsonStateData_t stateData) {
+void sm_state_help(jsonStateData_t &stateData) {
   if (lastState != smState) {
 #if DEBUG_STATES == true
     Serial.println(F("state: help"));
@@ -505,7 +505,7 @@ used for debugging the state name recall from PROGMEM
 
 // 6. Finally define the state machine function
 //    - Automatically generate the switch case from the list of ENUM states and list of functions! -> https://github.com/ImogenWren/switch-case-generator
-void sm_Run(jsonStateData_t stateData) {
+void sm_Run(jsonStateData_t& stateData) {
   if (smState < NUM_STATES) {
 #if DEBUG_STATE_MACHINE == true
     if (lastState != smState) {

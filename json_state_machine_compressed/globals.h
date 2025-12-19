@@ -59,7 +59,7 @@
 #define EEPROM_ADDRESS 0xFF  // EEPROM location for calibration data if required
 
 // Debugging
-#define DEBUG_STATES true
+#define DEBUG_STATES false
 #define DEBUG_STATE_MACHINE true
 
 

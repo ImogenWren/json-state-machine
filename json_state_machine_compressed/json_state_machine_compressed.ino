@@ -34,11 +34,19 @@ Global variables use 970 bytes (47%) of dynamic memory, leaving 1078 bytes for l
 
 now implementing removing the jsonState enums as they are redundent
  
- 
+
 VERSION 3.0.0
 - Now at close to minimum memory requirements for this topology
-Sketch uses 21724 bytes (70%) of program storage space. Maximum is 30720 bytes.
+Sketch uses 21134 bytes (68%) of program storage space. Maximum is 30720 bytes.
 Global variables use 932 bytes (45%) of dynamic memory, leaving 1116 bytes for local variables. Maximum is 2048 bytes.
+- changed all state machine functions to pass by reference so new copies of data are not created in both state machine function and state function when called
+(this shouldnt change the global overhead much, but it does stop additional data being created while within each state)
+Sketch uses 21058 bytes (68%) of program storage space. Maximum is 30720 bytes.
+Global variables use 904 bytes (44%) of dynamic memory, leaving 1144 bytes for local variables. Maximum is 2048 bytes.
+- did change it slightly though, I assume because the function pointer structure doesnt need to make memory space for that data structure
+
+
+
 
 
 */
