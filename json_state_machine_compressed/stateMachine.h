@@ -504,7 +504,6 @@ used for debugging the state name recall from PROGMEM
 */
 
 // 6. Finally define the state machine function
-//    - Automatically generate the switch case from the list of ENUM states and list of functions! -> https://github.com/ImogenWren/switch-case-generator
 void sm_Run(jsonStateData_t& stateData) {
   if (smState < NUM_STATES) {
 #if DEBUG_STATE_MACHINE == true

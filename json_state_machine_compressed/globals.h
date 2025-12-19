@@ -24,7 +24,7 @@
 
 // Program Attributes
 #define EXPERIMENT_NAME "json-state-machine-example"
-#define FIRMWARE_VERSION "V2.2.0"
+#define FIRMWARE_VERSION "3.0.0"
 #define DEVELOPER "Imogen-Wren"
 
 
