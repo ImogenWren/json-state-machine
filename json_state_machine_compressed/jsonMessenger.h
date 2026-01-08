@@ -58,7 +58,7 @@ public:
 
  // const char *getCMDkey(jsonStates state);  // to print the state in human readable form without coping the entire list of keys to global scope
 
-  const char *getDataType(dataTypes type);
+  const char *getDataType(dataTypes_t type);
 
   void printJSONdata(jsonStateData_t *data);
 

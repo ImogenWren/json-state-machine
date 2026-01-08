@@ -3,6 +3,7 @@
 STEP 1:
 
 - This header defines ALL active states for the state machine, via ENUM and Short text description saved on PROGMEM
+ Imogen Heard 08/01/2026
 
 
 */
@@ -13,6 +14,8 @@ STEP 1:
 
 // 1. Define all the valid states for the state machine with an enum.
 //    - This should include states triggered by user input, but may also contain states that are only accessable programatically
+// - Must start with "NULL_STATE"
+// - Must end with "NUM_STATES"
 typedef enum {
   STATE_NULL,
   STATE_INIT,
@@ -35,7 +38,9 @@ typedef enum {
   STATE_INFO,          // report settings, cal data and validity to user
   STATE_HELP,
   NUM_STATES  // Sentinal value lets us get the total number of states without manually counting. Do not forget this value, it is important for correct function
-} stateDef;
+} stateDef_t;
+
+
 
 
 // 2. Then we define two variables to hold the current state enum, and the previous state enum. Holding both these values allows us to compare them as we enter a state,

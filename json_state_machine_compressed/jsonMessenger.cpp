@@ -262,7 +262,7 @@ jsonStateData_t jsonMessenger::jsonReadSerialLoop() {
  // return jsonStateMap[state].cmd;
 //}
 
-const char *jsonMessenger::getDataType(dataTypes type) {
+const char *jsonMessenger::getDataType(dataTypes_t type) {
   //std::cout << typeNames[type] << "\0";
   return typeNames[type];
 }

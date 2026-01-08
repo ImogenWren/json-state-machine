@@ -9,9 +9,11 @@ Step 3:
   - back to using the function structure topology, however this requires that every state is passed stateData, even if that state does not use any values from it
   - suggest having a null line in each function that reads some variable from stateData just to shut up compiler warnings about unused variables.
 
-
+ Imogen Heard 08/01/2026
 
 */
+
+
 
 
 #ifndef stateMachine_h
@@ -21,8 +23,8 @@ Step 3:
 
 
 
-stateDef smState = STATE_INIT;
-stateDef lastState;
+stateDef_t smState = STATE_INIT;
+stateDef_t lastState;
 
 
 
@@ -57,7 +59,7 @@ void sm_state_help(jsonStateData_t &stateData);
 
 
 typedef struct {
-  stateDef State;                           //< Defines thestate enum
+  stateDef_t State;                           //< Defines thestate enum
   void (*func)(jsonStateData_t &stateData);  //< Defines the function to run
 } StateMachine_t;
 
@@ -145,25 +147,6 @@ void sm_state_init(jsonStateData_t &stateData) {
 
 
 
-
-// Not a state, but function called by "help" state to print commands list to users
-/*
-void print_cmds() {
-  Serial.println(F("   {\"servo\": 0 to 100 } -> Set Servo Position as a percentage"));
-  Serial.println(F("   {\"home\":0}           -> Home the Servo (writes angle to 40)"));
-  Serial.println(F("   {\"tare\":\"\"}        -> Zero encoder position & Zero Load Cell"));
-  Serial.println(F("   {\"sample\": 1 to 200} -> Set Samplerate in Hz (dflt: 200)"));  // Note, when changing print & sample rates, the size of the JSON doc may not be able to handle additional data. Max number of samples is governed by JSON doc size
-  Serial.println(F("   {\"print\": 1 to 50}   -> Set Print Rate in Hz (dflt: 50)"));
-  Serial.println(F("   {\"stream\":\"\"}      -> Start Data Streaming"));
-  Serial.println(F("   {\"endst\":\"\"}       -> End Data Streaming"));
-  Serial.println(F("   {\"secret\":\"xxxx\"}  -> set the secret word"));                         // Take a Snapshot of data
-  Serial.println(F("   {\"gtscrt\":0 }        -> Return true if secret has been set"));          // Change the time over which the data snapshot is taken
-  Serial.println(F("   {\"savcal\":x.xxx}     -> Save Calibration offset to eeprom or flash"));  // Ping the wobble-shaft with the servo
-  Serial.println(F("   {\"getcal\":0}         -> Get current calibration table"));               // Print commands list
-  Serial.println(F("   {\"info\":0}           -> Get Experiment Information"));                  // Print commands list
-  Serial.println(F("   {\"help\":\"\"}        -> Print Commands to Serial Monitor"));            // Print commands list
-}
-*/
 
 // State Wait is the default state for this program
 void sm_state_wait(jsonStateData_t &stateData) {

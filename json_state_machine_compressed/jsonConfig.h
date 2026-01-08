@@ -6,7 +6,7 @@ STEP 2:
       - the commands that will be required for users to interact with the state machine
       - A map of each command along with the datatype that will be passed with the command, and the state which this command will navigate to
       - A structure that will be passed out of the jsonMessenger library into every state, which will contain all the required data for any state
-
+ Imogen Heard 08/01/2026
 
 */
 
@@ -20,17 +20,7 @@ STEP 2:
 
 #include "stateConfig.h"  /// we should have already defined all the valid states and we will need them here
 
-// As alternative to <map> data structure has been developed, this is all depreciated
-/*
-#ifdef __AVR__
-#include <ArduinoSTL.h>  // [Arduino Library Manager][Modified Version -> https://github.com/ImogenWren/ArduinoSTL]
-#pragma "ArduinoSTL Libary Included"
-#elif defined(STM32) || defined(ARDUINO_ARCH_STM32)
-#pragma "STM32 Board -> Using Arrays Instead of std::stl"
-#endif
 
-//#include <map>  // [std::map]
-*/
 
 
 #define DEBUG_JSON_MESSENGER true
@@ -56,10 +46,10 @@ typedef enum {  // enum to pass variable types between functions
   AUTH_INT,    // 14/07/25 adding new datatype, this will tell jsonMessenger that 2 datas will be present, but will use already existing datatypes in RX data structure
   AUTH_FLOAT,  // 12/12/25 auth with float data
   AUTH_MSG     // 27/11/25 adding new datatype, auth with char message
-} dataTypes;
+} dataTypes_t;
 
 // 1b. Place these enums into an array to enable lookup by index (This shouldnt be nessissary but it fixed a bug at one point)
-const dataTypes dataTypes_array[8] = { EMPTY, INTEGER, UINT, FLOAT, CSTRING, BOOL, AUTH_INT, AUTH_MSG };
+const dataTypes_t dataTypes_array[8] = { EMPTY, INTEGER, UINT, FLOAT, CSTRING, BOOL, AUTH_INT, AUTH_MSG };
 
 // these are just to silence compiler warnings, maybe there is a better way of doing this but I havnt figured it out yet
 #pragma GCC diagnostic push
@@ -86,39 +76,35 @@ static char typeNames[][8] = {
 
 
 
-// 3. Link each jsonState ENUM with the datatype ENUM in a ~~map~~<depreciated> structure -> Now uses 2D array!.
-//const std::map<jsonStates, dataTypes> jsonStateMap = {  // Old version
-// also link directly to the state it triggers?
-
-
+// 2. Define a structure that will hold our command word to enter a state, the datatype to be passed to that state, and the ENUM for the state it triggers
 
 typedef struct {
   const char cmd[8];   //< Defines the command
-  dataTypes data_type;  //< Defines the ENUM for the data type
-  stateDef state;
+  dataTypes_t data_type;  //< Defines the ENUM for the data type
+  stateDef_t state;
 } jsonStateMapData_t;
 
-
+// 2b. Fill out state map for each command word
 
 const jsonStateMapData_t jsonStateMap[] = {
-  { "na",       dataTypes::EMPTY,         STATE_NULL },
-  { "servo",    dataTypes::INTEGER,       STATE_SERVO },
-  { "home",     dataTypes::EMPTY,         STATE_HOME },
-  { "tare",     dataTypes::INTEGER,       STATE_TARE },
-  { "sample",   dataTypes::UINT,          STATE_SAMPLERATE },
-  { "print",    dataTypes::UINT,          STATE_PRINTRATE },
-  { "stream",   dataTypes::EMPTY,         STATE_STARTSTREAM },
-  { "endst",    dataTypes::EMPTY,         STATE_STOPSTREAM },
-  { "secret",   dataTypes::CSTRING,       STATE_SETSECRET },
-  { "cal",      dataTypes::AUTH_FLOAT,    STATE_SET_CAL },
-  { "getcal",   dataTypes::EMPTY,         STATE_GET_CAL },
-  { "setmat",   dataTypes::AUTH_MSG,      STATE_SET_MATERIAL },
-  { "setdia",   dataTypes::AUTH_MSG,      STATE_SET_DIAMETER },
-  { "setang",   dataTypes::AUTH_INT,      STATE_SET_ANGLEMAX },
-  { "setload",  dataTypes::AUTH_INT,      STATE_SET_LOADMAX },
-  { "recall",   dataTypes::EMPTY,         STATE_GET_SETTINGS },
-  { "info",     dataTypes::EMPTY,         STATE_INFO },
-  { "help",     dataTypes::EMPTY,         STATE_HELP }
+  { "na",       dataTypes_t::EMPTY,         STATE_NULL },
+  { "servo",    dataTypes_t::INTEGER,       STATE_SERVO },
+  { "home",     dataTypes_t::EMPTY,         STATE_HOME },
+  { "tare",     dataTypes_t::INTEGER,       STATE_TARE },
+  { "sample",   dataTypes_t::UINT,          STATE_SAMPLERATE },
+  { "print",    dataTypes_t::UINT,          STATE_PRINTRATE },
+  { "stream",   dataTypes_t::EMPTY,         STATE_STARTSTREAM },
+  { "endst",    dataTypes_t::EMPTY,         STATE_STOPSTREAM },
+  { "secret",   dataTypes_t::CSTRING,       STATE_SETSECRET },
+  { "cal",      dataTypes_t::AUTH_FLOAT,    STATE_SET_CAL },
+  { "getcal",   dataTypes_t::EMPTY,         STATE_GET_CAL },
+  { "setmat",   dataTypes_t::AUTH_MSG,      STATE_SET_MATERIAL },
+  { "setdia",   dataTypes_t::AUTH_MSG,      STATE_SET_DIAMETER },
+  { "setang",   dataTypes_t::AUTH_INT,      STATE_SET_ANGLEMAX },
+  { "setload",  dataTypes_t::AUTH_INT,      STATE_SET_LOADMAX },
+  { "recall",   dataTypes_t::EMPTY,         STATE_GET_SETTINGS },
+  { "info",     dataTypes_t::EMPTY,         STATE_INFO },
+  { "help",     dataTypes_t::EMPTY,         STATE_HELP }
 };
 
 const uint8_t NUM_CMDS = 18;
@@ -206,9 +192,9 @@ const char *const jsonCmdRange[] PROGMEM = {
 // 5. Finally Declare a structure that will hold both the jsonStates enum, and any data that will need to be passed from jsonMessenger, into the states.
 // We can make this fairly generic by including additional datatypes, or we can reduce the size of the memory used by removing the unneeded ones
 struct jsonStateData_t {
-  stateDef stateEnum;   // This likely supercedes the commandState enum, as we can just direcly plug this variable into smState, saving another list of if/elses
+  stateDef_t stateEnum;   // This likely supercedes the commandState enum, as we can just direcly plug this variable into smState, saving another list of if/elses
  // jsonStates cmdState;  // The command state enum to tell state machine what state to go to next
-  dataTypes data_type;  // The type of data being passed along with structure (though state should know what data to expect anyway), this could be removed to save space
+  dataTypes_t data_type;  // The type of data being passed along with structure (though state should know what data to expect anyway), this could be removed to save space
   int16_t signedInt;    // empty generic data slots for each data type
   uint16_t uInt;
   float floatData;
