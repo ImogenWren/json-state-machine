@@ -54,6 +54,10 @@ void sm_state_get_settings(jsonStateData_t &stateData);
 void sm_state_info(jsonStateData_t &stateData);
 void sm_state_help(jsonStateData_t &stateData);
 
+// After finishing this list -> try running https://github.com/ImogenWren/json-state-machine/blob/main/state-machine-generator.py script to auto generate
+// the StateMachine[] array, and template functions for each state!
+
+
 
 // NEW -> (actually old? using function pointers to do the actual state machine)
 
