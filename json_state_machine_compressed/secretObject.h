@@ -49,6 +49,8 @@ public:
   secretObject();
 
 
+
+
   // Public Calibration struct -> modify for specific use case (needed to pass cal data + flag out of library)
   struct calStruc {
     bool calValid;
