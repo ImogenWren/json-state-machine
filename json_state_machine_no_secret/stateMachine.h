@@ -315,7 +315,7 @@ void sm_state_set_secret(jsonStateData_t &stateData) {
       smState = STATE_WAIT;
       return;
     } else {
-      memory.set_secret(stateData.msg);
+
     }
   }
   smState = STATE_WAIT;
@@ -330,9 +330,7 @@ void sm_state_set_cal(jsonStateData_t &stateData) {
     Serial.println(F("state: SET CAL"));
 #endif
     lastState = smState;
-    //  Serial.println(stateData.signedInt);
-    //  Serial.println(stateData.auth);
-    memory.set_cal_value(stateData.floatData, stateData.auth);
+
   }
   smState = STATE_WAIT;
 }
@@ -350,8 +348,7 @@ void sm_state_get_cal(jsonStateData_t &stateData) {
     stateData.uInt++;
     lastState = smState;
   }
-  cal = memory.get_cal();
-  memory.report_cal();
+
   smState = STATE_WAIT;
 }
 
@@ -362,7 +359,7 @@ void sm_state_set_material(jsonStateData_t &stateData) {
     Serial.println(F("state: SET MATERIAL"));
 #endif
     lastState = smState;
-    memory.set_material(stateData.msg, stateData.auth);
+
   }
   smState = STATE_WAIT;
 }
@@ -374,7 +371,7 @@ void sm_state_set_diameter(jsonStateData_t &stateData) {
     Serial.println(F("state: SET DIAMETER"));
 #endif
     lastState = smState;
-    memory.set_diameter(stateData.msg, stateData.auth);
+
   }
   smState = STATE_WAIT;
 }
@@ -385,7 +382,7 @@ void sm_state_set_angle_max(jsonStateData_t &stateData) {
     Serial.println(F("state: SET ANGLE MAX"));
 #endif
     lastState = smState;
-    memory.set_angle_max(stateData.signedInt, stateData.auth);
+
   }
   smState = STATE_WAIT;
 }
@@ -397,7 +394,7 @@ void sm_state_set_load_max(jsonStateData_t &stateData) {
     Serial.println(F("state: SET LOAD MAX"));
 #endif
     lastState = smState;
-    memory.set_load_max(stateData.signedInt, stateData.auth);
+
   }
   smState = STATE_WAIT;
 }
@@ -409,7 +406,7 @@ void sm_state_get_settings(jsonStateData_t &stateData) {
 #endif
     lastState = smState;
     stateData.uInt++;
-    settings = memory.get_settings();
+
   }
   smState = STATE_WAIT;
 }
@@ -425,8 +422,7 @@ void sm_state_info(jsonStateData_t &stateData) {
     stateData.uInt++;
     lastState = smState;
   }
-  memory.report_cal();
-  memory.report_settings();
+
   smState = STATE_WAIT;
 }
 

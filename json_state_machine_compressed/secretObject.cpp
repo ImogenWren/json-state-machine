@@ -10,9 +10,38 @@ Further Development: Imogen Wren
 */
 
 #include "secretObject.h"
+
+
+//#if !defined(ARDUINO_ARCH_SAMD)
+// ===============================
+// Common Arduino platforms
+// (AVR, ESP8266, ESP32, etc.)
+// Uses real EEPROM
+// ===============================
+
 #include <EEPROM.h>
 
+// EEPROM-based implementation here
+
+//#else
+// ===============================
+// SAMD21 platforms
+// (Nano 33 IoT, MKR Zero, Arduino Zero)
+// Uses Flash instead of EEPROM
+// ===============================
+
+//#include <FlashStorage.h>
+
+
+// FlashStorage-based implementation here
+
+//#endif
+
+
+
+
 secretObject::secretObject() {
+   
 }
 
 
